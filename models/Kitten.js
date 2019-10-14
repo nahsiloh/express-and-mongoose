@@ -6,8 +6,6 @@ const kittySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    index: true,
-    unique: true,
     minlength: 3,
     lowercase: true
   },

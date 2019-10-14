@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 
 const Kitten = require("../models/Kitten");
 
 router.get("/", async (req, res, next) => {
   try {
-    const kittens = await Kitten.find();
+    const kittens = await Kitten.find(req.query);
     res.send(kittens);
   } catch (err) {
     next(err);
@@ -41,7 +42,7 @@ router.post("/new", async (req, res, next) => {
 });
 
 // update a kitten
-router.put("/:name", async (req, res, next) => {
+router.patch("/:name", async (req, res, next) => {
   const name = req.params.name;
   const regex = new RegExp(name, "gi");
   const newUpdate = req.body;
@@ -57,8 +58,20 @@ router.put("/:name", async (req, res, next) => {
   }
 });
 
+const protectedRoute = (req, res, next) => {
+  try {
+    if (!req.cookies.token) {
+      throw new Error("You cannot adopt a kitten today!");
+    }
+    req.user = jwt.verify(req.cookies.token, process.env.JWT_SECRET_KEY);
+    next();
+  } catch (err) {
+    res.status(401).end("You are not authorised");
+  }
+};
+
 //delete a kitten
-router.delete("/:name", async (req, res, next) => {
+router.delete("/:name", protectedRoute, async (req, res, next) => {
   const name = req.params.name;
   const regex = new RegExp(name, "gi");
   try {
