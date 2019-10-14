@@ -7,6 +7,10 @@ if (process.env.NODE_ENV === "development") {
   dbUrl = `mongodb://localhost/${dbName}`;
 }
 
+if (process.env.NODE_ENV === "production") {
+  dbUrl = process.env.MONGO_URI;
+}
+
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

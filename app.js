@@ -26,7 +26,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // console.log(process.env.NODE_ENV, app.get("env"));
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "kitten-db") {
   require("./db");
 }
 
