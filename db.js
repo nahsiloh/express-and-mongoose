@@ -1,11 +1,17 @@
 //connecting to database
 const mongoose = require("mongoose");
-const dbName = "test";
+const dbName = "kitten-db";
 
-mongoose.connect(`mongodb://localhost/${dbName}`, {
+let dbUrl;
+if (process.env.NODE_ENV === "development") {
+  dbUrl = `mongodb://localhost/${dbName}`;
+}
+
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: false
 });
 
 const db = mongoose.connection;
